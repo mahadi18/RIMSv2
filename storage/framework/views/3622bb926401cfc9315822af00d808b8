@@ -1,0 +1,91 @@
+<?php $__env->startSection('content'); ?>
+    
+    <?php /* Session::get('message') !== null ? Session::get('message') : '' */ ?>
+    <?php if($errors->any()): ?>
+        <?php echo e(implode('', $errors->all('<div>:error</div>'))); ?>
+
+    <?php endif; ?>
+
+    <div class="page-header">
+        <h1>User / Edit </h1>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <form class="form-horizontal" action="<?php echo e(route('users.update', $user->id)); ?>" method="POST">
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
+                <input type="hidden" name="status" value="1">
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">NAME</label>
+                    <div class="col-md-6">
+                     <input type="text" name="name" class="form-control" value="<?php echo e($user->name); ?>"/><span class="mandatory">*</span>
+                        </div>
+                </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="email">Email</label>
+                        <div class="col-md-6">
+                     <input type="text" name="email" class="form-control" value="<?php echo e($user->email); ?>"/><span class="mandatory">*</span>
+                            </div>
+                </div><div class="form-group">
+                        <label class="col-md-4 control-label" for="email">Organization</label>
+                        <div class="col-md-6">
+                     <?php echo e($user->organization->name); ?>
+
+                            </div>
+                </div><div class="form-group">
+                        <label class="col-md-4 control-label" for="email">Role</label>
+                        <div class="col-md-6">
+                     <?php echo e($user->roles[0]->name); ?>
+
+                            </div>
+                </div><div class="form-group">
+                        <label class="col-md-4 control-label" for="email">Country</label>
+                        <div class="col-md-6">
+                     <?php echo e($country); ?>
+
+                            </div>
+                </div>
+
+
+                <div class="form-group">
+					<label class="col-md-4 control-label">Current Password</label>
+                    <div class="col-md-6">
+                        <input type="password" class="form-control" name="old_password">
+                        <span class="mandatory">*</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Password</label>
+                    <div class="col-md-6">
+                        <input type="password" class="form-control" name="password">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Confirm Password</label>
+                    <div class="col-md-6">
+                        <input type="password" class="form-control" name="password_confirmation">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-6">
+                        <a class="btn btn-default" href="<?php echo e(URL::previous()); ?>">Back</a>
+                        <button class="btn btn-primary" type="submit" value="Save">Save</button>
+                    </div>
+                    </div>
+
+            </form>
+        </div>
+    </div>
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

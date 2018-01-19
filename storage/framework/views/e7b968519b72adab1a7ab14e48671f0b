@@ -1,0 +1,239 @@
+<?php $__env->startSection('content'); ?>
+
+<div class="case-links">
+    <div class="row">
+        <div class="col-lg-12">
+            <a class="detail" href="/cases/<?php echo e($litigation->id); ?>/dashboard"><i class="fa fa-bars"></i> Case Status</a>
+            <ul style="text-align: right">
+                <li><a class="btn btn-primary" href="/cases/<?php echo $litigation->id?>/accessibility" style=" border-right: 1px solid #cccccc; background-color: #1e9d8b; color: white;margin-top: 5px;">Contributor List</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+
+<div class="case">
+    <div class="case-banner-info">
+        <div class="row">
+            <div class="col-lg-5 name-country">
+                <div class="thumb">
+                    <a href="/cases/<?php echo e($litigation->id); ?>/case-profile"> <img style="" alt=""
+                         src="<?php echo (!empty(get_victim_attachment('Victim Personal Image', $litigation->id)['file_path'])) ? get_victim_attachment('Victim Personal Image', $litigation->id)['file_path'] : '/uploads/-text.png'; ?>"/></a>
+                </div>
+				<div style="margin-left: 75px;">
+                <h4><a style="color: #333333" href="/cases/<?php echo e($litigation->id); ?>/case-profile"><?php echo e($litigation->name_during_rescue); ?></a></h4>
+                <?php //dd($physical); ?>
+
+                <p>Nationality: 
+                    <?php if(isset($physical) && $physical->nationality != 0): ?>
+                        <?php echo e($litigation->country($physical->nationality)); ?>
+
+                    <?php else: ?>
+                        <?php echo e($litigation->country($litigation->nationality)); ?>
+
+                    <?php endif; ?></p>
+
+                <p>Country: <?php if(isset($physical) && $physical->nationality != 0): ?>
+                            <?php echo e($litigation->country($physical->nationality)); ?>
+
+                            <?php else: ?>
+                            <?php echo e($litigation->country($litigation->nationality)); ?>
+
+                            <?php endif; ?></p></div>
+            </div>
+            <div class="col-lg-3 case-id">
+                Case ID: <?php echo e($litigation->case_id); ?>
+
+            </div>
+            <div class="col-lg-4 gender">
+                <p>Gender: <?php echo ($litigation->sex) == 'M' ? 'Male' : 'Female';?></p>
+
+                <p>Age: <?php
+                    if(isset($physical->date_of_birth)) {
+                    list($year, $month) = calculate_age($physical->date_of_birth);
+                    echo $year . ' years, ' . $month . ' months';
+                    }
+                    elseif(isset($physical->age_year_part)) {
+                        echo $physical->age_year_part. ' years, ' . $physical->age_month_part . ' months';;
+                    }
+                    elseif(isset($litigation->date_of_birth)) {
+                    list($year, $month) = calculate_age($litigation->date_of_birth);
+                    echo $year . ' years, ' . $month . ' months';
+                    }
+                    elseif(isset($litigation->age_year_part)) {
+                        echo $litigation->age_year_part. ' years, ' . $litigation->age_month_part . ' months';;
+                    }
+                    else {
+                        echo "Not Determined";
+                    }
+
+                    ?></p>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-3 narrow <?php echo strtolower(country_name_from_id($litigation->country_of_origin)). ' created_by_'.strtolower(country_from_user_id($litigation->created_by_id).'_ngo'); ?>">
+        <header class="tab-bg-dark-navy-green ">
+
+            <ul class="nav nav-tabs cases">
+                <?php
+                foreach ($tasks as $key => $task) {
+
+                    //dump($litigation->nationality." >> ".$task->id);
+                    if($litigation->nationality == 3 && $task->id==10 || $task->id==13 || $task->id==17)
+                    {
+                        continue;
+                    }
+
+                    $icon = '';
+                    $active_class = '';
+                    $class = '';
+                    if ($task->task_status_id == 1) {
+                        $class = 'new';
+                        $icon = '<i class="fa fa-circle-o" data-toggle="tooltip" data-placement="top" title="New"></i>';
+                    }
+                    if ($task->task_status_id == 2) {
+                        $class = 'skip';
+                        $icon = '<i class="fa fa-repeat" data-toggle="tooltip" data-placement="top" title="Skip"></i>';
+                    }
+                    if ($task->task_status_id == 3) {
+                        $class = 'progress';
+                        $icon = '<i class="fa fa-chain-broken" data-toggle="tooltip" data-placement="top" title="In Progress"></i>';
+                    }
+                    if ($task->task_status_id == 4) {
+                        $class = 'complete';
+                        $icon = '<i class="fa fa-check-square-o" data-toggle="tooltip" data-placement="top" title="Complete"></i>';
+                    }
+                    ?>
+
+                    <li class="<?php echo $parent_task_id == $task->id ? 'active' : '' ?> <?php echo $task->title ?>">
+                        <?php echo $icon; ?><a
+                            href="/cases/<?php echo $litigation->id; ?>?tid=<?php echo $task->id; ?>"><span><?php echo $task->title ?></span></a>
+                    </li>
+                <?php
+                }//die;
+                ?>
+            </ul>
+        </header>
+    </div>
+
+    <div class="col-md-9 case-show <?php echo strtolower(country_name_from_id($litigation->country_of_origin)); ?>">
+
+        <section class="panel">
+            <?php if (count($sub_tasks) > 0) {
+
+                $current_task = isset($_GET["sub_task"]) ? $_GET["sub_task"] : $sub_tasks[0]->id;
+
+                ?>
+                <header class="panel-heading tab-bg-dark-navy-green ">
+                    <ul class="nav nav-tabs cases">
+                        <?php
+                        foreach ($sub_tasks as $sub_task) {
+                            ?>
+                            <li class="<?php echo $sub_task->id == $current_task ? 'active' : '' ?>">
+                                <a href="/cases/<?php echo $litigation->id; ?>?tid=<?php echo $parent_task_id; ?>&sub_task=<?php echo $sub_task->id; ?>"><?php echo $sub_task->title ?></a>
+                            </li>
+                        <?php
+                        }
+                        ?>
+                    </ul>
+                </header>
+            <?php } ?>
+                <?php
+                //dd($template_task);
+                $class = strtolower(str_replace(".","",str_replace(" ", "-", $template_task->title)));
+
+                //dd($class);
+                ?>
+            <div class="panel-body <?php echo e($class); ?>">
+                <div class="tab-content">
+                    <?php if(Session::has('message')): ?>
+                    <div class="message success" >
+                        <div class="alert alert-success" style="margin-top:20px !important;">
+                            <?php echo e(Session::get('message')); ?> 
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if(Session::has('error')): ?>
+                    <div class="message alert-success">
+                        <div class="alert alert-danger">
+                            <?php echo e(Session::get('error')); ?>
+
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if(count($errors) > 0): ?>
+                        <div class="alert alert-danger">
+                            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                            <ul>
+                                <?php foreach($errors->all() as $error): ?>
+                                    <li><?php echo e($error); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php
+                    //dd($template_task);
+                    $partial = 'litigations.partials.' . strtolower(str_replace(".","",str_replace(" ", "-", $template_task->title)));
+
+                    //dd($partial);
+                    ?>
+                    <?php echo $__env->make($partial, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+        //alert("ssss");
+        $('.nepal .cbrms-tasks [id*="heading"] a  h2').click(function(){
+            $( this ).toggleClass( "expanded" );
+        })
+
+        $('.ngo-hir .cbrms-tasks h3').click(function(){
+            $( this ).toggleClass( "expanded" );
+        })
+
+        $( ".delete-file" ).on( "click", function() {
+           var trigger_class = $(this).parent('.fileupload-new').prop('className');
+            $(this).closest('.fileupload').children('.fileupload-new.thumbnail').css('display','none');
+            $(this).css('display','none');
+            $('input.flag').val(1);
+        });
+
+        $( ".toggler.btn" ).on( "click", function() {
+            $('.tabuler-list').hide(function(){
+                $('.add-form').show();
+            })
+        });
+
+        $( ".cancel.btn" ).on( "click", function() {
+            $('.tabuler-list').show(function(){
+                $('.add-form').hide();
+            })
+        });
+
+
+
+
+
+
+    });
+</script>
+
+
+<?php $__env->stopSection(); ?>
+
+
+<?php echo $__env->make('full-content', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

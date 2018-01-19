@@ -1,0 +1,101 @@
+<?php $__env->startSection('content'); ?>
+
+
+
+<div class="profile-menu">
+    <ul>
+        <li>
+            <?php if($litigation->status=='open') { ?>
+            <a class="detail" href="/cases/<?php echo e($litigation->id); ?>/dashboard"><i class="fa fa-bars"></i>Case Status</a>
+            <?php }
+            else {
+            ?>
+                <form action="/cases/<?php echo e($litigation->id); ?>/change_status" method="post">
+                    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
+                    <input type="hidden" name="status" value="open">
+                    <button type="submit" class="detail">Activate Case</button>
+                </form>
+            <?php } ?>
+        </li>
+        <li class="active"><a href="#">Case Timeline</a></li>
+        <li><a href="/cases/<?php echo e($litigation->id); ?>/full-profile">Full Profile</a></li>
+        <li><a href="/cases/<?php echo e($litigation->id); ?>/take-over">Survivor Takenover</a></li>
+        <li><a href="/cases/<?php echo e($litigation->id); ?>/document-archive">Document Archive</a></li>
+        <li><a href="/cases/<?php echo e($litigation->id); ?>/change-log">Update Log</a></li>
+    </ul>
+</div>
+<section class="panel">
+    <div class="panel-body">
+        <div class="text-center mbot30">
+            <h3 class="timeline-title">Timeline</h3>
+
+            <p class="t-info">Case Created by <?php echo e(organization_name_from_user_id($litigation->created_by_id)); ?> on <?php echo e($litigation->created_at->setTimezone(session('user_current_timezone'))->format('M jS Y,H:i A D')); ?></p>
+            <?php if($litigation->status=='open') { ?>
+                <form action="/cases/<?php echo e($litigation->id); ?>/change_status" method="post" style="display: inline;">
+                    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
+                    <input type="hidden" name="status" value="closed">
+                    <button type="submit" class="btn btn-success">
+                        Close this case
+                    </button>
+                    <!-- <a onclick="if(confirm('Delete? Are you sure?')) { return true } else {return false }"; class="btn btn-danger">Delete this case</a> -->
+                </form>
+
+                <?php if( $role->role_id == 1 ): ?>
+                <form action="<?php echo e(route('cases.destroy', $litigation->id)); ?>" method="POST" style="display: inline;" onsubmit="if(confirm('Do you want to delete this case history?')) { return true } else {return false };"><input type="hidden" name="_method" value="DELETE"><input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>"> 
+                    <button class="btn btn-danger" type="submit">
+                        Delete this case
+                    </button>
+                </form>
+                <?php endif; ?>
+
+            <?php } else { ?>
+                <p class="t-info" style="font-style: italic">Case closed on <?php echo e($litigation->updated_at->setTimezone(session('user_current_timezone'))->format('M jS Y,H:i A D')); ?></p>
+            <?php } ?>
+        </div>
+
+        <?php /* <?php if(Session::has('message')): ?> */ ?>
+        <!-- <div class="message success">
+            <div class="alert alert-success"> -->
+                <?php /* Session::get('message') */ ?>
+            <!-- </div>
+        </div> -->
+        <?php /*  <?php endif; ?> */ ?>
+
+        <?php if(!empty($histories)): ?>
+
+        <div class="timeline">
+            <?php $count = 1; ?>
+            <?php foreach($histories as $history): ?>
+            <article class="timeline-item <?php if ($count % 2 == 0) {
+                echo 'alt';
+            } ?>">
+                <div class="timeline-desk">
+                    <div class="panel">
+                        <div class="panel-body">
+                                            <span class="arrow<?php if ($count % 2 == 0) {
+                                                echo '-alt';
+                                            } ?>"></span>
+                                            <span
+                                                class="timeline-icon <?php echo strtolower($history->fieldName()); ?>"></span>
+                                            <span
+                                                class="timeline-date"><?php echo e($history->created_at->setTimezone(session('user_current_timezone'))->format('M jS Y')); ?></span>
+
+                            <h1 class="red"><?php echo e($history->created_at->setTimezone(session('user_current_timezone'))->format('H:i A')); ?> |
+                                <?php echo e($history->created_at->setTimezone(session('user_current_timezone'))->format('D')); ?></h1>
+
+                            <p><?php echo e($litigation->verbalizeHistory($history)); ?></p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <?php $count++; ?>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+        <div class="clearfix">&nbsp;</div>
+    </div>
+</section>
+
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('case-profile', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

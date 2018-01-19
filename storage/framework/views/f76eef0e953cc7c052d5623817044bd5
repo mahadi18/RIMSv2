@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Mosaddek">
+    <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <?php /*
+    <link rel="shortcut icon" href="img/favicon.png">
+    */ ?>
+    <link rel="shortcut icon" href="<?php echo asset('img/favicon.ico'); ?>">
+    <title>Missing Child Alert - RIMS</title>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+    
+    <!-- Bootstrap core CSS -->
+<?php echo Html::style('css/bootstrap.min.css'); ?>
+
+<?php echo Html::style('css/bootstrap-reset.css'); ?>
+
+<!--external css-->
+<?php echo Html::style('assets/font-awesome/css/font-awesome.css'); ?>
+
+
+<?php echo Html::style('assets/bootstrap-fileupload/bootstrap-fileupload.css'); ?>
+
+<?php echo Html::style('assets/bootstrap-wysihtml5/bootstrap-wysihtml5.css'); ?>
+
+<?php echo Html::style('assets/bootstrap-datepicker/css/datepicker.css'); ?>
+
+<?php echo Html::style('assets/bootstrap-timepicker/compiled/timepicker.css'); ?>
+
+<?php echo Html::style('assets/bootstrap-colorpicker/css/colorpicker.css'); ?>
+
+<?php echo Html::style('assets/bootstrap-daterangepicker/daterangepicker-bs3.css'); ?>
+
+<?php echo Html::style('assets/bootstrap-datetimepicker/css/datetimepicker.css'); ?>
+
+<?php echo Html::style('assets/jquery-multi-select/css/multi-select.css'); ?>
+
+
+<!-- Custom styles for this template -->
+<?php echo Html::style('css/style.css'); ?>
+
+<?php echo Html::style('css/style-responsive.css'); ?>
+
+<?php echo Html::style('css/custom.css'); ?>
+
+<?php echo $__env->yieldContent('style'); ?>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 9]>
+    <?php echo Html::script('js/html5shiv.js'); ?>
+
+    <?php echo Html::script('js/respond.min.js'); ?>
+
+    <![endif]-->
+</head>
+<body class="<?php echo $controller . ' ' . $action . ' ' . Auth::user()->roles[0]->name; ?>">
+<section id="container" class="">
+
+<?php /*<?php $__env->startSection('header'); ?>*/ ?>
+<!--header start-->
+<?php echo $__env->make('layouts.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<!--header end-->
+<?php /*<?php echo $__env->yieldSection(); ?>*/ ?>
+
+<?php /*<?php $__env->startSection('sidebar'); ?>*/ ?>
+<!--sidebar start-->
+<?php echo $__env->make('layouts.left_navigation', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<!--sidebar end-->
+<?php /*<?php echo $__env->yieldSection(); ?>*/ ?>
+
+<!--main content start-->
+    <section id="main-content">
+        <section class="wrapper site-min-height">
+            <?php if(count($errors) > 0): ?>
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        <?php foreach($errors->all() as $error): ?>
+                            <li><?php echo e($error); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+        <?php endif; ?>
+
+
+        <!-- page start-->
+        <?php echo $__env->yieldContent('content'); ?>
+        <!-- page end-->
+        </section>
+    </section>
+    <!--main content end-->
+
+<?php /*<?php $__env->startSection('footer'); ?>*/ ?>
+<!--footer start-->
+<?php echo $__env->make('layouts.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<!--footer end-->
+    <?php /*<?php echo $__env->yieldSection(); ?>*/ ?>
+
+
+</section>
+
+<!-- js placed at the end of the document so the pages load faster -->
+<?php echo Html::script('js/jquery.js'); ?>
+
+<?php echo Html::script('js/bootstrap.min.js'); ?>
+
+<?php /*
+<script class="include" type="text/javascript" src="<?php echo asset('js/jquery.dcjqaccordion.2.7.js'); ?>"></script>
+*/ ?>
+<?php echo Html::script('js/jquery.dcjqaccordion.2.7.js'); ?>
+
+<?php echo Html::script('js/jquery.scrollTo.min.js'); ?>
+
+<?php echo Html::script('js/jquery.nicescroll.js'); ?>
+
+<?php echo Html::script('js/respond.min.js'); ?>
+
+
+<!-- dataTables scripts start -->
+<?php echo Html::script('assets/data-tables/jquery.dataTables.js'); ?>
+
+<?php echo Html::script('assets/data-tables/DT_bootstrap.js'); ?>
+
+<!-- editable dataTables script -->
+<?php echo Html::script('js/editable-table.js'); ?>
+
+<!-- dataTables scripts end -->
+
+<!--this page plugins-->
+
+<?php echo Html::script('assets/fuelux/js/spinner.min.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-fileupload/bootstrap-fileupload.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-wysihtml5/wysihtml5-0.3.0.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-wysihtml5/bootstrap-wysihtml5.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-datepicker/js/bootstrap-datepicker.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-daterangepicker/moment.min.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-daterangepicker/daterangepicker.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-timepicker/js/bootstrap-timepicker.js'); ?>
+
+<?php echo Html::script('assets/jquery-multi-select/js/jquery.multi-select.js'); ?>
+
+<?php echo Html::script('assets/jquery-multi-select/js/jquery.quicksearch.js'); ?>
+
+
+<?php /* Script for CKEditor */ ?>
+<?php echo Html::script('assets/ckeditor/ckeditor.js'); ?>
+
+
+<?php /* Script for TimezoneDetect */ ?>
+<?php echo Html::script('js/jstz.min.js'); ?>
+
+
+<!--common script for all pages-->
+<?php echo Html::script('js/common-scripts.js'); ?>
+
+
+<!--this page  script only-->
+<?php echo Html::script('js/advanced-form-components.js'); ?>
+
+<?php echo Html::script('js/jquery.highlight.js'); ?>
+
+<?php echo Html::script('js/iucms.js'); ?>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        // Disable all inputs in a page
+        // $("form :input").attr("disabled","disabled");
+
+        EditableTable.init();
+
+        $(document).on('click', '.add_doc_type', function () {
+            alert('This feature is under development. Please be patient.');
+        });
+
+        $(document).on('click', '#detect_timezone', function () {
+            var timezone = jstz.determine();
+            console.log(timezone.name());
+            alert(timezone.name());
+        });
+
+    });
+</script>
+
+<?php echo $__env->yieldContent('script'); ?>
+</body>
+</html>

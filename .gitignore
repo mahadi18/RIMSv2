@@ -1,0 +1,9 @@
+/vendor
+/node_modules
+bootstrap/cache/*
+.env
+config/database.php
+/.idea
+composer.lock
+storage/logs/
+

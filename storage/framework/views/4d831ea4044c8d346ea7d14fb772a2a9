@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Mosaddek">
+    <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <?php /*
+    <link rel="shortcut icon" href="img/favicon.png">
+    */ ?>
+    <link rel="shortcut icon" href="<?php echo asset('img/favicon.ico'); ?>">
+    <title>Missing Child Alert - RIMS</title>
+    <!-- Bootstrap core CSS -->
+    <?php echo Html::style('css/bootstrap.min.css'); ?>
+
+    <?php echo Html::style('css/bootstrap-reset.css'); ?>
+
+    <!--external css-->
+    <?php echo Html::style('assets/font-awesome/css/font-awesome.css'); ?>
+
+
+    <?php echo Html::style('assets/bootstrap-fileupload/bootstrap-fileupload.css'); ?>
+
+    <?php echo Html::style('assets/bootstrap-wysihtml5/bootstrap-wysihtml5.css'); ?>
+
+    <?php echo Html::style('assets/bootstrap-datepicker/css/datepicker.css'); ?>
+
+    <?php echo Html::style('assets/bootstrap-timepicker/compiled/timepicker.css'); ?>
+
+    <?php echo Html::style('assets/bootstrap-colorpicker/css/colorpicker.css'); ?>
+
+    <?php echo Html::style('assets/bootstrap-daterangepicker/daterangepicker-bs3.css'); ?>
+
+    <?php echo Html::style('assets/bootstrap-datetimepicker/css/datetimepicker.css'); ?>
+
+    <?php echo Html::style('assets/jquery-multi-select/css/multi-select.css'); ?>
+
+
+    <!-- Custom styles for this template -->
+    <?php echo Html::style('css/style.css'); ?>
+
+    <?php echo Html::style('css/style-responsive.css'); ?>
+
+    <?php echo Html::style('css/custom.css'); ?>
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 9]>
+    <?php echo Html::script('js/html5shiv.js'); ?>
+
+    <?php echo Html::script('js/respond.min.js'); ?>
+
+    <![endif]-->
+
+
+    <?php /* Script for CKEditor */ ?>
+    <?php echo Html::script('assets/ckeditor/ckeditor.js'); ?>
+
+    <?php echo Html::script('js/jquery.js'); ?>
+
+    <?php echo Html::script('js/bootstrap.min.js'); ?>
+
+</head>
+<body class="<?php echo $controller.' '.$action.' '.Auth::user()->roles[0]->name; ?>" >
+<section id="container" class="">
+
+    <?php $__env->startSection('header'); ?>
+    <!--header start-->
+    <?php echo $__env->make('layouts.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <!--header end-->
+    <?php echo $__env->yieldSection(); ?>
+
+    <?php $__env->startSection('sidebar'); ?>
+    <!--sidebar start-->
+    <?php echo $__env->yieldSection(); ?>
+
+    <!--main content start-->
+    <section class="wrapper site-min-height">
+
+
+        <?php if(count($errors) > 0): ?>
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+                <?php foreach($errors->all() as $error): ?>
+                <li><?php echo e($error); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <?php endif; ?>
+
+
+        <div class="case-profile">
+            <div class="row">
+                <div class="col-lg-2 left-menu">
+                    <?php //dd($litigation) ?>
+                    <div class="thumbnail">
+                        <img style="" alt=""
+                             src="<?php echo (!empty(get_victim_attachment('Victim Personal Image', $litigation->id)['file_path'])) ? get_victim_attachment('Victim Personal Image', $litigation->id)['file_path'] : '/uploads/-text.png'; ?>"/>
+                    </div>
+                    <h4><?php echo e($litigation->name_during_rescue); ?></h4>
+                    <p><label>Case ID:</label><?php echo e($litigation->case_id); ?></p>
+                    <?php /*<p><label>Office File Reference Number:</label>ACIN0234</p>*/ ?>
+                    <p><a class="btn btn-success" href="http://rims-dev.dnet.org.bd/cases/<?=$litigation->id?>/document-archive"><i class="fa fa-paperclip"></i> All Documents</a> </p>
+                    <div class="other-info">
+                        <p><label>Nationality:</label><?php echo e($litigation->country($litigation->country_of_origin)); ?></p>
+                        <p><label>Age:</label> <?php
+                            if(isset($litigation->date_of_birth)) {
+                                list($year, $month) = calculate_age($litigation->date_of_birth);
+                                echo $year . ' years, ' . $month . ' months';
+                            }
+                            elseif(isset($litigation->age_year_part)) {
+                                echo $litigation->age_year_part. ' years, ' . $litigation->age_month_part . ' months';;
+                            }
+                            else {
+                                echo "Not Determined";
+                            }
+
+                            ?>
+
+                            </p>
+                        <p class="address"><label>Address:</label><?php echo e($litigation->rescued_from_address); ?></p>
+                        <p><label>Country:</label><?php echo e($litigation->country($litigation->country_of_origin)); ?></p>
+                        <p><label>Rescue Date:</label><?php
+                            $date = new DateTime($litigation->rescue_date);
+                            echo $date->format('jS M \'y'); ?></p>
+                    </div>
+                </div>
+                <div class="col-lg-10">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <?php if(Session::has('message')): ?>
+                            <div class="message success">
+                                <div class="alert alert-success">
+                                    <?php echo e(Session::get('message')); ?>
+
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                            <!-- page start-->
+                            <?php echo $__env->yieldContent('content'); ?>
+                            <!-- page end-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--main content end-->
+
+    <?php $__env->startSection('footer'); ?>
+    <!--footer start-->
+    <footer class="site-footer">
+    <div class="text-center">
+        Repatriation Information Management System (RIMS) version 2<br>Missing Child Alert (MCA) 
+  
+        <a href="#" class="go-top">
+            <i class="fa fa-angle-up"></i>
+        </a>
+    </div>
+</footer>
+    <!--footer end-->
+    <?php echo $__env->yieldSection(); ?>
+
+
+</section>
+
+<!-- js placed at the end of the document so the pages load faster -->
+
+<?php /*
+<script class="include" type="text/javascript" src="<?php echo asset('js/jquery.dcjqaccordion.2.7.js'); ?>"></script>
+*/ ?>
+<?php echo Html::script('js/jquery.dcjqaccordion.2.7.js'); ?>
+
+<?php echo Html::script('js/jquery.scrollTo.min.js'); ?>
+
+<?php echo Html::script('js/jquery.nicescroll.js'); ?>
+
+<?php echo Html::script('js/respond.min.js'); ?>
+
+
+<?php echo Html::script('js/jquery.dataTables.js'); ?>
+
+<?php echo Html::script('js/DT_bootstrap.js'); ?>
+
+<!-- editable dataTables script -->
+<?php echo Html::script('js/editable-table.js'); ?>
+
+
+<!--this page plugins-->
+
+<?php echo Html::script('assets/fuelux/js/spinner.min.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-fileupload/bootstrap-fileupload.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-wysihtml5/wysihtml5-0.3.0.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-wysihtml5/bootstrap-wysihtml5.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-datepicker/js/bootstrap-datepicker.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-daterangepicker/moment.min.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-daterangepicker/daterangepicker.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js'); ?>
+
+<?php echo Html::script('assets/bootstrap-timepicker/js/bootstrap-timepicker.js'); ?>
+
+<?php echo Html::script('assets/jquery-multi-select/js/jquery.multi-select.js'); ?>
+
+<?php echo Html::script('assets/jquery-multi-select/js/jquery.quicksearch.js'); ?>
+
+
+
+<!--common script for all pages-->
+<?php echo Html::script('js/common-scripts.js'); ?>
+
+
+<!--this page  script only-->
+<?php echo Html::script('js/jquery.highlight.js'); ?>
+
+<?php echo Html::script('js/iucms.js'); ?>
+
+<?php echo Html::script('js/full-content.js'); ?>
+
+<?php echo Html::script('js/advanced-form-components.js'); ?>
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+        EditableTable.init();
+
+        $(document).on('click', '.add_doc_type', function () {
+            alert('This feature is under development. Please be patient.');
+        })
+    });
+</script>
+
+
+</body>
+</html>

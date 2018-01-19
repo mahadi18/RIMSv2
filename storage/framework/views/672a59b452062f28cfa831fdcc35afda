@@ -1,0 +1,84 @@
+<?php $__env->startSection('content'); ?>
+    <?php if(Session::has('message')): ?>
+    <br>
+        <div class="alert alert-info">
+            <?php echo e(Session::get('message')); ?>
+
+        </div>
+    <?php endif; ?>
+    
+    <div class="page-header">
+        <?php if($organization_id>0): ?>
+        <h1>Users of <strong><?php echo e($organization->name); ?></strong></h1>
+        <?php else: ?>
+        <h1>Users </h1>
+        <?php endif; ?>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <?php if($organization_id>0): ?>
+            <a class="btn btn-success" 
+            href="<?php echo e(route('users.create')); ?>?id=<?php echo e($organization_id); ?>$&&name=<?php echo e($organization->name); ?>&&type=<?php echo e($organization->org_type($organization->org_type)); ?>&&district=<?php echo e($organization->district_name($organization->district_id)); ?>&&country=<?php echo e($organization->country_name($organization->country)); ?>">Create</a>
+            <?php else: ?>
+            <a class="btn btn-success" 
+            href="<?php echo e(route('users.create')); ?>">Create</a>
+            <?php endif; ?>
+           <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NAME</th>
+                        <th style="width: 20%">DESCRIPTION</th>
+                        <th style="width: 20%">Last Login</th>
+                        <th class="text-right">OPTIONS</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                <?php foreach($users as $user): ?>
+                <tr>
+                    <td><?php echo e($user->id); ?></td>
+                    <td><?php echo e($user->name); ?></td>
+                    <td><?php echo e($user->email); ?></td>
+                    <td style="width: 20%">
+                        <?php
+                            if($user->last_login!='0000-00-00 00:00:00')
+                            echo \Carbon\Carbon::createFromTimeStamp(strtotime($user->last_login))->diffForHumans();
+                            else
+                            echo "Still not login into the system";    
+                        ?>
+
+                    </td>
+                    <td class="text-right">
+                        <a class="btn btn-primary" href="<?php echo e(route('users.show', $user->id)); ?>">View</a>
+                        <a class="btn btn-warning " href="<?php echo e(route('users.edit', $user->id)); ?>">Edit</a>
+                        <?php
+                        $msg = $user->status==1? 'Deactivate':'*Activate*';
+
+                        ?>
+                        <form action="/activate-deactivate/<?php echo e($user->id); ?>" method="GET" style="display: inline;" onsubmit="if(confirm('Are you sure?')) { return true } else {return false };">
+                            <!-- <input type="hidden" name="_method" value="PUT">
+                            <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>"> -->
+                            <!-- <input type="hidden" name="status" value="< ?php echo $user->status = = 1 ? '0' : '1' ?>"> -->
+                            <button class="btn btn-danger" style="background-color: #E9EAED; color: #EC6459" type="submit"><?php echo $msg ?></button>
+                        </form>
+                    </td>
+                </tr>
+
+                <?php endforeach; ?>
+
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+
+    <div class="paginagor"> <?php echo $users->render(); ?></div>
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

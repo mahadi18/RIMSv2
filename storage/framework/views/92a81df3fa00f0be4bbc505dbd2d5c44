@@ -1,0 +1,51 @@
+<?php $__env->startSection('content'); ?>
+    <?php if(Session::has('message')): ?>
+    <br>
+        <div class="alert alert-info">
+            <?php echo e(Session::get('message')); ?>
+
+        </div>
+    <?php endif; ?>
+    
+    <div class="page-header">
+        <h1>Action Points</h1>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>TITLE</th>
+                        <th class="text-right">OPTIONS</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                <?php foreach($actpoints as $actpoint): ?>
+                <tr>
+                    <td><?php echo e($actpoint->id); ?></td>
+                    <td><?php echo e($actpoint->title); ?></td>
+
+                    <td class="text-right">
+                        <a class="btn btn-primary" href="<?php echo e(route('actpoints.show', $actpoint->id)); ?>">View</a>
+                        <a class="btn btn-warning " href="<?php echo e(route('actpoints.edit', $actpoint->id)); ?>">Edit</a>
+                        <!--<form action="<?php echo e(route('actpoints.destroy', $actpoint->id)); ?>" method="POST" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };"><input type="hidden" name="_method" value="DELETE"><input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>"> <button class="btn btn-danger" type="submit">Delete</button></form>-->
+                    </td>
+                </tr>
+
+                <?php endforeach; ?>
+
+                </tbody>
+            </table>
+
+            <a class="btn btn-success" href="<?php echo e(route('actpoints.create')); ?>">Create</a>
+        </div>
+    </div>
+
+    
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
